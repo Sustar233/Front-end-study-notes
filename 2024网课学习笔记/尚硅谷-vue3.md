@@ -184,3 +184,23 @@ to 属性的两种写法
 静态字符串：例如 to="/home"。
 动态绑定对象：例如 :to="{ path: '/about' }" 或 :to="{ name: 'zhuye' }"（可以通过路由名称进行导航）。
 选择哪种写法取决于你的具体需求和场景。使用对象形式可以提供更多的灵活性和功能，例如传递查询参数或编程式导航等。而静态字符串形式则更简洁和直观，适用于简单的导航场景。
+
+路由传参
+● query
+写法1 
+  <router-link :to="`/about/detail?id=${news.id}&title=${news.title}`">qwq</router-link>
+写法2
+<router-link :to="{
+    path: '/news/detail',
+    query: {
+      // v-for中
+      id: news.id,
+      title: news.title
+    }
+  }">qwq</router-link>
+使用参数
+import { useRoute } from 'vue-router';
+  let route = useRoute()
+  console.log('@', route);
+
+● params
