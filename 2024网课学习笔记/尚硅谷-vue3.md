@@ -204,3 +204,94 @@ import { useRoute } from 'vue-router';
   console.log('@', route);
 
 ● params
+
+:to="`/news/detail/${news.id}/${news.title}/${news.content}`"
+路由配置：path: 'detail/:id/:title/:content?'
+import {useRoute} from 'vue-router'
+const route = useRoute()
+{{ route.params.id }}
+
+备注1：传递params参数时，若使用ts的对象写法，必须使用name配置项，不能用path
+备注2：需要提前在规则中占位
+
+在router配置props: true后，会将路由收到的所有params参数作为props传给路由组件
+
+函数写法，可以自己决定将query或者params作为props给路由组件
+props(route){
+return route.query
+}
+第三种写法：对象写法
+
+routerlink中加入replace进行网页跳转不会记录
+
+编程式路由导航：脱离<RouterLInk>实现路由跳转
+import {useRouter} from 'vue-router'
+router.push('/news')
+router.push(和:to的对象写法相同)
+
+重定向配置
+{
+            path: '/',
+            redirect: '/home'
+        }
+
+
+let obj = reactive({
+  a: 1,
+  b: 2,
+  c: ref(3)
+})
+let x = ref(9)
+console.log(obj.a);
+console.log(obj.b);
+// 注意，reactive里面的ref不需要.value, 可直接使用
+console.log(obj.c);
+console.log(x.value);
+
+pinia 集中式状态（数据）管理 |  redux   vuex   pinia
+
+import { defineStore } from 'pinia'
+
+export const useCountStore = defineStore('count', {
+    // actions里面放置的是一个一个的方法，用于响应组件中的“动作”
+    actions: {
+        increment(value: number){
+            // 修改数据
+            if (this.sum < 10) {
+                this.sum += value
+            }
+        }
+    },
+    // 真正存储数据的地方
+    state() {
+        return {
+            sum: 6
+        }
+    }
+})
+
+import { useCountStore } from '@/store/count'
+
+// 使用useCountStore，得到一个专门保存count相关的store
+const countStore = useCountStore()
+// 两种方式均可读取
+
+// data
+let n = ref(1)  // 用户选择的数字
+
+// method
+function add() {
+  // 第一种修改方式
+  countStore.sum += n.value
+
+  // 第二种修改方式
+  // countStore.$patch({
+  //   sum: 888,
+  //   school: 'sgg',
+  //   adress: 'beijing'
+  // })
+
+  // 第三种修改方式
+    // countStore.increment(n.value)
+}
+
