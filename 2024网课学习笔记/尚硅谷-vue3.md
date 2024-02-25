@@ -289,7 +289,7 @@ function add() {
   //   sum: 888,
   //   school: 'sgg',
   //   adress: 'beijing'
-  // })
+  // });
 
   // 第三种修改方式
     // countStore.increment(n.value)
