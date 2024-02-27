@@ -162,6 +162,7 @@ onUnmounted(() => {
 history 模式
 优点：URL 更加美观，不带有 #，更接近传统网站 URL。
 缺点：后期项目上线时，需要服务器端配合处理路径问题，否则刷新页面可能会出现 404 错误。
+
 javascript
 import { createRouter, createWebHistory } from 'vue-router'  
   
@@ -171,6 +172,7 @@ const router = createRouter({
 hash 模式（多用于后台项目）
 优点：兼容性更好，因为不需要服务器端处理路径问题。
 缺点：URL 带有 # 不太美观，且在 SEO 优化方面相对较差。
+
 javascript
 import { createRouter, createWebHashHistory } from 'vue-router'  
   
@@ -182,116 +184,120 @@ to 属性的两种写法
 
 静态字符串：例如 to="/home"。
 动态绑定对象：例如 :to="{ path: '/about' }" 或 :to="{ name: 'zhuye' }"（可以通过路由名称进行导航）。
-选择哪种写法取决于你的具体需求和场景。使用对象形式可以提供更多的灵活性和功能，例如传递查询参数或编程式导航等。而静态字符串形式则更简洁和直观，适用于简单的导航场景。
+选择哪种写法取决于具体需求和场景。使用对象形式可以提供更多的灵活性和功能，例如传递查询参数或编程式导航等。而静态字符串形式则更简洁和直观，适用于简单的导航场景。
 
 路由传参
-● query
-写法1 
-  <router-link :to="`/about/detail?id=${news.id}&title=${news.title}`">qwq</router-link>
-写法2
-<router-link :to="{
-    path: '/news/detail',
-    query: {
-      // v-for中
-      id: news.id,
-      title: news.title
-    }
-  }">qwq</router-link>
-使用参数
-import { useRoute } from 'vue-router';
-  let route = useRoute()
-  console.log('@', route);
+query
+写法1:
 
-● params
+html
+<router-link :to="`/about/detail?id=${news.id}&title=${news.title}`">qwq</router-link>
+写法2:
 
+html
+<router-link :to="{  
+    path: '/news/detail',  
+    query: {  
+      id: news.id,  
+      title: news.title  
+    }  
+}">qwq</router-link>
+使用参数:
+
+javascript
+import { useRoute } from 'vue-router';  
+let route = useRoute();  
+console.log('@', route);
+params
+html
 :to="`/news/detail/${news.id}/${news.title}/${news.content}`"
 路由配置：path: 'detail/:id/:title/:content?'
-import {useRoute} from 'vue-router'
-const route = useRoute()
-{{ route.params.id }}
 
-备注1：传递params参数时，若使用ts的对象写法，必须使用name配置项，不能用path
-备注2：需要提前在规则中占位
+javascript
+import { useRoute } from 'vue-router';  
+const route = useRoute();  
+console.log(route.params.id);
+备注1：传递 params 参数时，若使用 TS 的对象写法，必须使用 name 配置项，不能用 path。
+备注2：需要提前在规则中占位。
 
-在router配置props: true后，会将路由收到的所有params参数作为props传给路由组件
+在 router 配置 props: true 后，会将路由收到的所有 params 参数作为 props 传给路由组件。
 
-函数写法，可以自己决定将query或者params作为props给路由组件
-props(route){
-return route.query
+函数写法
+可以自己决定将 query 或者 params 作为 props 给路由组件：
+
+javascript
+props(route) {  
+  return route.query;  
 }
-第三种写法：对象写法
+编程式路由导航
+脱离 <RouterLink> 实现路由跳转：
 
-routerlink中加入replace进行网页跳转不会记录
-
-编程式路由导航：脱离<RouterLInk>实现路由跳转
-import {useRouter} from 'vue-router'
-router.push('/news')
-router.push(和:to的对象写法相同)
-
+javascript
+import { useRouter } from 'vue-router';  
+router.push('/news');  
+// 或者使用对象写法，与 :to 属性相同  
+router.push({ path: '/news' });
 重定向配置
-{
-            path: '/',
-            redirect: '/home'
-        }
-
-
-let obj = reactive({
-  a: 1,
-  b: 2,
-  c: ref(3)
-})
-let x = ref(9)
-console.log(obj.a);
-console.log(obj.b);
-// 注意，reactive里面的ref不需要.value, 可直接使用
-console.log(obj.c);
+javascript
+{  
+  path: '/',  
+  redirect: '/home'  
+}
+Reactive 和 Ref
+javascript
+import { reactive, ref } from 'vue';  
+  
+let obj = reactive({  
+  a: 1,  
+  b: 2,  
+  c: ref(3)  
+});  
+  
+let x = ref(9);  
+  
+console.log(obj.a);  
+console.log(obj.b);  
+// 注意，reactive 里面的 ref 不需要 .value，可直接使用  
+console.log(obj.c);  
 console.log(x.value);
+Pinia 集中式状态（数据）管理
+类似于 Redux, Vuex, 但这是 Pinia。
 
-pinia 集中式状态（数据）管理 |  redux   vuex   pinia
+javascript
+import { defineStore } from 'pinia';  
+  
+export const useCountStore = defineStore('count', {  
+  actions: {  
+    increment(value: number) {  
+      if (this.sum < 10) {  
+        this.sum += value;  
+      }  
+    }  
+  },  
+  state() {  
+    return {  
+      sum: 6  
+    };  
+  }  
+});
+在组件中使用：
 
-import { defineStore } from 'pinia'
-
-export const useCountStore = defineStore('count', {
-    // actions里面放置的是一个一个的方法，用于响应组件中的“动作”
-    actions: {
-        increment(value: number){
-            // 修改数据
-            if (this.sum < 10) {
-                this.sum += value
-            }
-        }
-    },
-    // 真正存储数据的地方
-    state() {
-        return {
-            sum: 6
-        }
-    }
-})
-
-import { useCountStore } from '@/store/count'
-
-// 使用useCountStore，得到一个专门保存count相关的store
-const countStore = useCountStore()
-// 两种方式均可读取
-
-// data
-let n = ref(1)  // 用户选择的数字
-
-// method
-function add() {
-  // 第一种修改方式
-  countStore.sum += n.value
-
-  // 第二种修改方式
-  // countStore.$patch({
-  //   sum: 888,
-  //   school: 'sgg',
-  //   adress: 'beijing'
-  // });
-
-  // 第三种修改方式
-    // countStore.increment(n.value)
+javascript
+import { useCountStore } from '@/store/count';  
+import { ref } from 'vue';  
+  
+const countStore = useCountStore();  
+let n = ref(1); // 用户选择的数字  
+  
+function add() {  
+  // 第一种修改方式  
+  // countStore.sum += n.value;  
+  
+  // 第二种修改方式（不推荐直接修改状态，应通过 actions）  
+  // countStore.$patch({ sum: 888 });  
+  
+  // 第三种修改方式（推荐）  
+  countStore.increment(n.value);  
 }
 
 
