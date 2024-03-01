@@ -233,6 +233,7 @@ props(route) {
 脱离 <RouterLink> 实现路由跳转：
 
 javascript
+
 import { useRouter } from 'vue-router';  
 router.push('/news');  
 // 或者使用对象写法，与 :to 属性相同  
