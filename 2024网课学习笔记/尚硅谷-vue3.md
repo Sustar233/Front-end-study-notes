@@ -302,5 +302,39 @@ function add() {
 }
 
 
+mitt
+原理类似事件总线 
+接收数据的：提前订阅 消息
+提供数据的：发布消息
 
--
+import mitt from 'mitt'
+const emitter = mitt()
+//  绑定事件
+emitter.on('test1', ()=>{
+console.log('test1被调用了')
+})
+// 触发事件
+emitter.emit('test1')
+
+emitter.on('test2', (value: any)=>{
+console.log(value)
+})
+emitter.emit('test2', 123)
+export default emitter
+
+注：在onUnmounted阶段需要解绑事件  emitter.off('test1')
+
+
+v-model
+用在html标签上时
+v-model等价于
+ :value="username" @input="username = (<HTMLInputElement>$event.target).value"
+
+用在组件标签上 v-model
+组件标签可以使用 :modelValue="username"  @update:modelValue="username = $event"
+子组件接收 
+defineProps(['modelValue'])
+const emit = defineEmits(['update: modelValue'])
+子组件input上可以使用 
+:value="modelValue"
+@input="emit('update: modelValue', (<HTMLInputElement>$event.target).value)"
