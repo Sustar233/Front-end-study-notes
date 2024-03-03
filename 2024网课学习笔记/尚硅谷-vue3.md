@@ -338,3 +338,33 @@ const emit = defineEmits(['update: modelValue'])
 子组件input上可以使用 
 :value="modelValue"
 @input="emit('update: modelValue', (<HTMLInputElement>$event.target).value)"
+
+$refs: 父传子
+$parent: 子传父
+<Child1 ref='c1'>
+<Child2 ref='c2'>
+@click="getAllChild($refs)"
+值是一个对象，对象包含所有的子
+
+function getAllChild(refs: {[key: string]: any}){
+for (let key in refs) {
+refs[key].book += 3
+}
+}
+
+@click = "minusHouse($parent)"
+
+$refs/$parent需要子/父组件defineExpose({c1, c2, house})
+
+
+provide 和 inject 完全不打扰子组件的祖孙通信
+import {provide} from 'vue'
+// 向后代提供数据
+provide('user', name)
+
+孙组件
+import {inject} from 'vue'
+let user = inject('user', '我是默认值')
+let {money, updateMoney} = inject('moneyContext', {money: 0, updateMoney: (x: number)=>{}})
+
+pinia
