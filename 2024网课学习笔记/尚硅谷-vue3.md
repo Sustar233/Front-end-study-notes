@@ -368,3 +368,39 @@ let user = inject('user', '我是默认值')
 let {money, updateMoney} = inject('moneyContext', {money: 0, updateMoney: (x: number)=>{}})
 
 pinia
+
+
+slot
+默认插槽
+<HelloWorld title="hot game">
+        <ul>
+          <li v-for="g in games" :key="g.id">{{ g.name }}</li>
+        </ul>
+      </HelloWorld>
+      <HelloWorld title="nowdays city">
+        <img :src="imgUrl" alt="" width="100%">
+      </HelloWorld>
+
+<div class="category"> 
+    <slot>
+      默认内容
+    </slot>
+  </div>
+
+ 具名插槽
+用template包裹，加 v-slot:s1
+子组件<slot name="s1"></slot> 可以给插槽添加名字用于排列顺序
+
+作用域插槽
+数据在子那边，但根据数据生成的结构，
+父组件
+<Child>
+<template v-slot="params">
+<li v-for="g in params.youxi"></li>
+</template>
+</Child>
+解构写法： v-slot = {youxi}
+子组件
+<slot :youxi="games" x="哈哈" y="111"></slot>
+原本父组件是无法得到games的，在子组件的slot添加属性，在父组件的template上添加v-slot后，slot上添加的所有属性都会打包到params中
+let games = reactive{[{}, {}, {}]}
