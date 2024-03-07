@@ -1,5 +1,5 @@
 
-# 创建Vue3工程
+## 创建Vue3工程
 
 ```bash
 npm create vue@latest
@@ -117,7 +117,7 @@ withDefaults(defineProps<{ list?: Persons }>(), {
 });
 ```
 
-# Vue 3 生命周期与组件挂载  
+## Vue 3 生命周期与组件挂载  
   
 在 Vue 3 中，生命周期钩子有所变化，不再包含创建前和创建完毕的阶段。在 `<script setup>` 中，相关的逻辑处理相当于在组件的创建阶段进行。  
   
@@ -151,50 +151,54 @@ onBeforeUnmount(() => {
 onUnmounted(() => {  
   // ...  
 })
+```
 注意：先执行子组件的挂载，再执行父组件的挂载。
 
-路由组件与一般组件
-路由组件：根据路由规则动态渲染出来的组件，通常放在 pages/ 或 views/ 目录中。
-一般组件：通过手写标签方式直接使用的组件，例如 <Demo />，通常放在 components/ 目录中。
+## 路由组件与一般组件
+* 路由组件：根据路由规则动态渲染出来的组件，通常放在 pages/ 或 views/ 目录中。
+* 一般组件：通过手写标签方式直接使用的组件，例如 <Demo />，通常放在 components/ 目录中。
 当通过点击导航切换路由时，视觉上消失的路由组件默认是被卸载掉的，需要时再重新挂载。
 
-路由器的工作模式
-history 模式
-优点：URL 更加美观，不带有 #，更接近传统网站 URL。
-缺点：后期项目上线时，需要服务器端配合处理路径问题，否则刷新页面可能会出现 404 错误。
+## 路由器的工作模式
+#### history 模式
+* 优点：URL 更加美观，不带有 #，更接近传统网站 URL。
+* 缺点：后期项目上线时，需要服务器端配合处理路径问题，否则刷新页面可能会出现 404 错误。
 
-javascript
+```javascript
 import { createRouter, createWebHistory } from 'vue-router'  
   
 const router = createRouter({  
   history: createWebHistory(), // 使用 history 模式  
 })
-hash 模式（多用于后台项目）
-优点：兼容性更好，因为不需要服务器端处理路径问题。
-缺点：URL 带有 # 不太美观，且在 SEO 优化方面相对较差。
+```
+#### hash 模式（多用于后台项目）
+* 优点：兼容性更好，因为不需要服务器端处理路径问题。
+* 缺点：URL 带有 # 不太美观，且在 SEO 优化方面相对较差。
 
-javascript
+```javascript
 import { createRouter, createWebHashHistory } from 'vue-router'  
   
 const router = createRouter({  
   history: createWebHashHistory(), // 使用 hash 模式  
 })
-to 属性的两种写法
+```
+## to 属性的两种写法
 在 Vue Router 中，to 属性用于指定导航的目标地址，有两种常见的写法：
 
-静态字符串：例如 to="/home"。
-动态绑定对象：例如 :to="{ path: '/about' }" 或 :to="{ name: 'zhuye' }"（可以通过路由名称进行导航）。
+* 静态字符串：例如 `to="/home"`。
+* 动态绑定对象：例如 `:to="{ path: '/about' }"` 或 `:to="{ name: 'zhuye' }"`（可以通过路由名称进行导航）。
 选择哪种写法取决于具体需求和场景。使用对象形式可以提供更多的灵活性和功能，例如传递查询参数或编程式导航等。而静态字符串形式则更简洁和直观，适用于简单的导航场景。
 
-路由传参
-query
-写法1:
+## 路由传参
+#### query
+* 写法1:
 
-html
+```html
 <router-link :to="`/about/detail?id=${news.id}&title=${news.title}`">qwq</router-link>
-写法2:
+```
+* 写法2:
 
-html
+```html
 <router-link :to="{  
     path: '/news/detail',  
     query: {  
@@ -202,9 +206,10 @@ html
       title: news.title  
     }  
 }">qwq</router-link>
+```
 使用参数:
 
-javascript
+```javascript
 import { useRoute } from 'vue-router';  
 let route = useRoute();  
 console.log('@', route);
@@ -213,10 +218,10 @@ html
 :to="`/news/detail/${news.id}/${news.title}/${news.content}`"
 路由配置：path: 'detail/:id/:title/:content?'
 
-javascript
 import { useRoute } from 'vue-router';  
 const route = useRoute();  
 console.log(route.params.id);
+```
 备注1：传递 params 参数时，若使用 TS 的对象写法，必须使用 name 配置项，不能用 path。
 备注2：需要提前在规则中占位。
 
@@ -225,27 +230,30 @@ console.log(route.params.id);
 函数写法
 可以自己决定将 query 或者 params 作为 props 给路由组件：
 
-javascript
+```javascript
 props(route) {  
   return route.query;  
 }
+```
 编程式路由导航
 脱离 <RouterLink> 实现路由跳转：
 
-javascript
+```javascript
 
 import { useRouter } from 'vue-router';  
 router.push('/news');  
 // 或者使用对象写法，与 :to 属性相同  
 router.push({ path: '/news' });
+```
 重定向配置
-javascript
+```javascript
 {  
   path: '/',  
   redirect: '/home'  
 }
+```
 Reactive 和 Ref
-javascript
+```javascript
 import { reactive, ref } from 'vue';  
   
 let obj = reactive({  
@@ -261,10 +269,11 @@ console.log(obj.b);
 // 注意，reactive 里面的 ref 不需要 .value，可直接使用  
 console.log(obj.c);  
 console.log(x.value);
-Pinia 集中式状态（数据）管理
+```
+## Pinia 集中式状态（数据）管理
 类似于 Redux, Vuex, 但这是 Pinia。
 
-javascript
+```javascript
 import { defineStore } from 'pinia';  
   
 export const useCountStore = defineStore('count', {  
@@ -281,9 +290,10 @@ export const useCountStore = defineStore('count', {
     };  
   }  
 });
+```
 在组件中使用：
 
-javascript
+```javascript
 import { useCountStore } from '@/store/count';  
 import { ref } from 'vue';  
   
@@ -300,13 +310,14 @@ function add() {
   // 第三种修改方式（推荐）  
   countStore.increment(n.value);  
 }
+```
 
-
-mitt
+## mitt
 原理类似事件总线 
 接收数据的：提前订阅 消息
 提供数据的：发布消息
 
+```javascript
 import mitt from 'mitt'
 const emitter = mitt()
 //  绑定事件
@@ -321,31 +332,34 @@ console.log(value)
 })
 emitter.emit('test2', 123)
 export default emitter
-
+```
 注：在onUnmounted阶段需要解绑事件  emitter.off('test1')
 
 
-v-model
+## v-model
 用在html标签上时
 v-model等价于
- :value="username" @input="username = (<HTMLInputElement>$event.target).value"
+ ```:value="username" @input="username = (<HTMLInputElement>$event.target).value"```
 
 用在组件标签上 v-model
-组件标签可以使用 :modelValue="username"  @update:modelValue="username = $event"
+组件标签可以使用 ```:modelValue="username"  @update:modelValue="username = $event"```
 子组件接收 
+```javascript
 defineProps(['modelValue'])
 const emit = defineEmits(['update: modelValue'])
+```
 子组件input上可以使用 
 :value="modelValue"
 @input="emit('update: modelValue', (<HTMLInputElement>$event.target).value)"
 
-$refs: 父传子
-$parent: 子传父
-<Child1 ref='c1'>
+### $refs: 父传子
+### $parent: 子传父
+```html<Child1 ref='c1'>
 <Child2 ref='c2'>
 @click="getAllChild($refs)"
+```
 值是一个对象，对象包含所有的子
-
+```javascript
 function getAllChild(refs: {[key: string]: any}){
 for (let key in refs) {
 refs[key].book += 3
@@ -355,9 +369,10 @@ refs[key].book += 3
 @click = "minusHouse($parent)"
 
 $refs/$parent需要子/父组件defineExpose({c1, c2, house})
+```
 
-
-provide 和 inject 完全不打扰子组件的祖孙通信
+## provide 和 inject 完全不打扰子组件的祖孙通信
+```javascript
 import {provide} from 'vue'
 // 向后代提供数据
 provide('user', name)
@@ -366,12 +381,14 @@ provide('user', name)
 import {inject} from 'vue'
 let user = inject('user', '我是默认值')
 let {money, updateMoney} = inject('moneyContext', {money: 0, updateMoney: (x: number)=>{}})
+```
 
-pinia
+## pinia
 
 
-slot
-默认插槽
+## slot
+#### 默认插槽
+```javascript
 <HelloWorld title="hot game">
         <ul>
           <li v-for="g in games" :key="g.id">{{ g.name }}</li>
@@ -386,21 +403,59 @@ slot
       默认内容
     </slot>
   </div>
-
- 具名插槽
+```
+#### 具名插槽
 用template包裹，加 v-slot:s1
 子组件<slot name="s1"></slot> 可以给插槽添加名字用于排列顺序
 
-作用域插槽
+#### 作用域插槽
 数据在子那边，但根据数据生成的结构，
 父组件
+```javascript
 <Child>
 <template v-slot="params">
 <li v-for="g in params.youxi"></li>
 </template>
 </Child>
-解构写法： v-slot = {youxi}
+```
+解构写法： `v-slot = {youxi}`
 子组件
+```javascript
 <slot :youxi="games" x="哈哈" y="111"></slot>
 原本父组件是无法得到games的，在子组件的slot添加属性，在父组件的template上添加v-slot后，slot上添加的所有属性都会打包到params中
 let games = reactive{[{}, {}, {}]}
+```
+
+
+## 自定义ref
+```javascript
+let initValue = '你好'
+let msg = customRef((track, trigger)=>{
+  return {
+    // get何时调用？msg被读取时
+    get() {
+      track() // 跟踪：告诉Vue数据msg很重要，你要对msg进行持续关注，一旦msg变化就去更新
+      return initValue
+    },
+    // set何时调用？msg被修改时
+    set(value) { 
+      initValue = value
+      trigger() // 触发：通知vue一下数据msg变化了
+    },
+  }
+})
+```
+
+## Suspense
+子组件有异步请求时，父组件要用
+
+```javascript
+<Suspense>
+  <template v-slot:default>
+    <Child/>
+  </template>
+  <template v-slot:fallback>
+    <h2>加载中...</h2>
+  </template>
+</Suspense>
+```
